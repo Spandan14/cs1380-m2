@@ -1,4 +1,4 @@
-#!/bin/node
+#!/opt/homebrew/bin/node
 
 global.config = global.config || require('./distribution/local/config');
 
