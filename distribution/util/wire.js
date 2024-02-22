@@ -1,5 +1,22 @@
+const {DEFAULT_CALLBACK} = require('../local/local');
+const local = require('../local/local');
+
 function createRPC(func) {
+  if (!local.hasOwnProperty('rpcService')) {
+    local.rpcService = {};
+  }
+  const funcID = `<rpc> #${local.rpcService.length}`;
+  local['rpcService'][funcID] = func;
+
   // Write some code...
+  return function(...args) {
+    const callback = args.pop() || DEFAULT_CALLBACK;
+
+    var remote = {node: global.config, service: 'rpcService',
+      method: funcID};
+
+    local.comm.send(args, remote, callback);
+  };
 }
 
 /*

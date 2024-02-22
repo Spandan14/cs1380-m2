@@ -19,6 +19,9 @@ comm     A message communication interface     send
 const DEFAULT_CALLBACK = (e, v) => e ? console.error(e) : console.log(v);
 // [SERVICE UTILITIES] --------------------------------------------------------
 
+// [SERVICE] rpc --------------------------------------------------------------
+const rpcMap = new Map();
+// [SERVICE] rpc --------------------------------------------------------------
 
 // [SERVICE] status -----------------------------------------------------------
 const NODE_NID = id.getNID(node);
@@ -142,6 +145,7 @@ const commSend = (payload, remote, callback) => {
     });
   });
 
+  MESSAGE_COUNT++;
   req.write(serialized);
 };
 
@@ -159,4 +163,6 @@ module.exports = {
   status: status,
   routes: routes,
   comm: comm,
+  rpcMap: rpcMap,
+  DEFAULT_CALLBACK,
 };

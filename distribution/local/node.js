@@ -27,12 +27,23 @@ const start = function(started) {
     });
 
     req.on('end', () => {
-      console.log(data);
       const payload = serialization.deserialize(data);
       const pathTokens = req.url.split('/');
       const service = pathTokens[1];
-      const method = pathTokens[2];
-      local[service][method](...payload, serviceCallback);
+      var method = pathTokens[2];
+
+      if (service === 'rpcService') {
+        method = local.rpcMap.get(method);
+        if (!local[service].has(method)) {
+          res.write([new Error(`[ERR!] | service: 'rpcService' | 
+            method: ${method} not found`), null]);
+        } else {
+          var result = local[service][method](...payload);
+          res.write([null, result]);
+        }
+      } else {
+        local[service][method](...payload, serviceCallback);
+      };
     });
   });
 
